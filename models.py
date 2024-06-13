@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy import Column, Integer, String, ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 from database import engine
@@ -12,7 +14,7 @@ class Rule(Base):
     id = Column(Integer, primary_key=True)
     input_format = Column(String)
     output_format = Column(String)
-    flags = Column(String)
+    flags = Column(ARRAY(String))
 
 def create_tables():
     Base.metadata.create_all(engine)

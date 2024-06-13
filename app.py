@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 from crud import create_rule, get_all_rules, update_rule, delete_rule
-from models import create_tables
+from models import create_tables, drop_tables
 from service import rule_to_dict
 
 app = Flask(__name__)
 
+drop_tables()
 create_tables()
 
 
@@ -17,8 +18,8 @@ def add_rule():
         input_format = data.get('input_format')
         output_format = data.get('output_format')
         flags = data.get('flags')
-
         new_rule = create_rule(input_format, output_format, flags)
+
         return jsonify(rule_to_dict(new_rule)), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 400
@@ -38,7 +39,7 @@ def get_rules():
 """Updating a rule endpoint"""
 
 @app.route('/rule/<int:rule_id>', methods=['PUT'])
-def update_rule_by_id(rule_id):
+def update_rule_by_id(rule_id: int):
     try:
         data = request.get_json()
         input_format = data.get('input_format')
@@ -57,7 +58,7 @@ def update_rule_by_id(rule_id):
 """Deleting a rule endpoint"""
 
 @app.route('/rule/<int:rule_id>', methods=['DELETE'])
-def delete_rule_by_id(rule_id):
+def delete_rule_by_id(rule_id: int):
     try:
         deleted_rule = delete_rule(rule_id)
         if deleted_rule:
